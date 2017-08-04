@@ -1,5 +1,7 @@
 #include "ofApp.h"
 
+using namespace ofxCv;
+using namespace cv;
 //--------------------------------------------------------------
 void ofApp::setup(){
 
@@ -40,6 +42,7 @@ void ofApp::setup(){
 
     pTurns = turns;
     rando = false;
+    bIncludeGestures = true;
   
     
     shell.generate(n,m,D, turns, alpha, beta, A, mu, omega, phi, a, b, L, P, W1, W2, N);
@@ -56,14 +59,26 @@ void ofApp::setup(){
     cam.enableOrtho();
     testCam.setPosition(0,0,-600);
     
-    cout << "listening for osc messages on port " << PORT << "\n";
-    receiver.setup(PORT);
+    tracker.setup();
+    wCam.initGrabber(640,480);
+    
+    cout << "listening for osc messages on port " << IN_PORT << "\n";
+    receiver.setup(IN_PORT);
+    osc.setup(HOST, OUT_PORT);
+
     
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
+    
+    wCam.update();
+    if(wCam.isFrameNew()) {
+        tracker.update(toCv(wCam));
+        sendFaceOsc(tracker);
+        //rotationMatrix = tracker.getRotationMatrix();
+    }
     // check for waiting messages
     while(receiver.hasWaitingMessages()){
         
@@ -124,7 +139,15 @@ void ofApp::draw(){
     ImGui::SliderFloat("W2", &W2, -10.f, 10.f);
     ImGui::SliderInt("N", &N, -10.f, 10.f);
     GUI.end();
-    
+    if(tracker.getFound()) {
+        ofDrawBitmapString(ofToString((int) ofGetFrameRate()), ofGetWidth()-20, 20);
+        
+    //    if(bDrawMesh) {
+            ofSetLineWidth(1);
+            
+            tracker.draw();
+        }
+//}
     if(rando) randomise();
    // autoPilot();
     ofEnableDepthTest();

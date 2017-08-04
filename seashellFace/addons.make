@@ -1,2 +1,10 @@
+ofxCv
+ofxFaceTracker
+ofxGrt
+ofxGui
 ofxImGui
+ofxKinect
+ofxOpenCv
 ofxOsc
+ofxPS3EyeGrabber
+ofxXmlSettings

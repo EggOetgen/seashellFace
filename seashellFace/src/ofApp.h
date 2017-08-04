@@ -4,13 +4,19 @@
 #include "ofxImGui.h"
 #include "shell.hpp"
 #include "ofxOsc.h"
+#include "ofxGui.h"
+#include "ofxCv.h"
+#include "FaceOsc.h"
+#include "ofxXmlSettings.h"
+#include "ofxPS3EyeGrabber.h"
 
 //OSC:
 #define HOST "localhost"
-#define PORT 12000
+#define IN_PORT 12000
+#define OUT_PORT 6448
 
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp, public FaceOsc{
 
 	public:
 		void setup();
@@ -96,11 +102,14 @@ class ofApp : public ofBaseApp{
     ofVec2f lastMouse;
     ofQuaternion curRot;
 
+    ofVideoGrabber wCam;
+    ofxFaceTracker tracker;
+
 
     ofxOscReceiver receiver;
 
+    
 
-
-float rotation =0;
+    float rotation =0;
 
 };

@@ -146,8 +146,9 @@ void ofApp::draw() {
         if(bDrawMesh) {
             ofSetLineWidth(1);
             
-            //tracker.draw();
-            tracker.getImageMesh().drawWireframe();
+            tracker.draw();
+           // tracker.getImageMesh().drawWireframe();
+            //tracker.drawPose();
             
             ofPushView();
             ofSetupScreenOrtho(sourceWidth, sourceHeight, -1000, 1000);
