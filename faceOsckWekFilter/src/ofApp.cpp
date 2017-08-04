@@ -20,6 +20,7 @@ void ofApp::loadSettings() {
     ofxXmlSettings xml;
     xml.loadFile("settings.xml");
     
+   // cam.setGrabber(std::make_shared<ofxPS3EyeGrabber>());
     bool bUseCamera = true;
     
     xml.pushTag("source");
@@ -30,6 +31,7 @@ void ofApp::loadSettings() {
     
     xml.pushTag("camera");
     if(xml.getNumTags("device") > 0) {
+      //  cam.setGrabber(std::make_shared<ofxPS3EyeGrabber>());
         cam.setDeviceID(xml.getValue("device", 0));
     }
     if(xml.getNumTags("framerate") > 0) {
@@ -38,6 +40,8 @@ void ofApp::loadSettings() {
     camWidth = xml.getValue("width", 640);
     camHeight = xml.getValue("height", 480);
     cam.initGrabber(camWidth, camHeight);
+//    cam.getGrabber<ofxPS3EyeGrabber>()->setAutogain(true);
+//    cam.getGrabber<ofxPS3EyeGrabber>()->setAutoWhiteBalance  (true);
     xml.popTag();
     
     xml.pushTag("movie");

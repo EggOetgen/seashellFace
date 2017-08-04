@@ -5,6 +5,7 @@
 #include "ofxCv.h"
 #include "FaceOsc.h"
 #include "ofxXmlSettings.h"
+#include "ofxPS3EyeGrabber.h"
 
 class ofApp : public ofBaseApp, public FaceOsc {
 public:
