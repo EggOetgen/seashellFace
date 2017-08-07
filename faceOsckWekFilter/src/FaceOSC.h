@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ofxFaceTracker.h"
+#include "ofxFaceTracker2.h"
 #include "ofxOsc.h"
 #include "ofxGrt.h"
+
 
 #define DEFAULT_OSC_ADDRESS "/wek/inputs"
 
@@ -15,7 +17,11 @@ public:
     void addMessage(int data);
     void sendBundle();
     
-    void sendFaceOsc(ofxFaceTracker& tracker);
+//    vector<ofVec3f> ofxFaceTracker::getObjectPoints() const;
+//  //  ofVec3f ofxFaceTracker::getObjectPoint(int i) const;
+//    void ofxFaceTracker::updateObjectPoints();
+    
+    void sendFaceOsc(ofxFaceTracker2& tracker);
     
     string host;
     int port;

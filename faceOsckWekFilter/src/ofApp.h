@@ -7,6 +7,7 @@
 #include "ofxXmlSettings.h"
 #include "ofxPS3EyeGrabber.h"
 
+
 class ofApp : public ofBaseApp, public FaceOsc {
 public:
     void loadSettings();
@@ -28,7 +29,8 @@ public:
     ofVideoPlayer movie;
     ofBaseVideoDraws *videoSource;
     
-    ofxFaceTracker tracker;
+   // ofxFaceTracker tracker;
+    ofxFaceTracker2 tracker;
     ofMatrix4x4 rotationMatrix;
         
     ofxPanel gui;

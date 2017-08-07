@@ -1,5 +1,6 @@
 ofxCv
 ofxFaceTracker
+ofxFaceTracker2
 ofxGrt
 ofxGui
 ofxKinect

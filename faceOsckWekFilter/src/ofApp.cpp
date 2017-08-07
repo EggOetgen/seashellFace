@@ -80,21 +80,21 @@ void ofApp::loadSettings() {
     }
     
     xml.pushTag("face");
-    if(xml.getNumTags("rescale")) {
-        tracker.setRescale(xml.getValue("rescale", 1.));
-    }
-    if(xml.getNumTags("iterations")) {
-        tracker.setIterations(xml.getValue("iterations", 5));
-    }
-    if(xml.getNumTags("clamp")) {
-        tracker.setClamp(xml.getValue("clamp", 3.));
-    }
-    if(xml.getNumTags("tolerance")) {
-        tracker.setTolerance(xml.getValue("tolerance", .01));
-    }
-    if(xml.getNumTags("attempts")) {
-        tracker.setAttempts(xml.getValue("attempts", 1));
-    }
+//    if(xml.getNumTags("rescale")) {
+//        tracker.setRescale(xml.getValue("rescale", 1.));
+//    }
+//    if(xml.getNumTags("iterations")) {
+//        tracker.setIterations(xml.getValue("iterations", 5));
+//    }
+//    if(xml.getNumTags("clamp")) {
+//        tracker.setClamp(xml.getValue("clamp", 3.));
+//    }
+//    if(xml.getNumTags("tolerance")) {
+//        tracker.setTolerance(xml.getValue("tolerance", .01));
+//    }
+//    if(xml.getNumTags("attempts")) {
+//        tracker.setAttempts(xml.getValue("attempts", 1));
+//    }
     bDrawMesh = true;
     if(xml.getNumTags("drawMesh")) {
         bDrawMesh = (bool) xml.getValue("drawMesh", 1);
@@ -130,9 +130,10 @@ void ofApp::update() {
     
     videoSource->update();
     if(videoSource->isFrameNew()) {
+ //       getObjectPoints();
         tracker.update(toCv(*videoSource));
         sendFaceOsc(tracker);
-        rotationMatrix = tracker.getRotationMatrix();
+        //rotationMatrix = tracker.getRotationMatrix();
     }
 }
 
@@ -140,28 +141,28 @@ void ofApp::draw() {
     ofSetColor(255);
     videoSource->draw(0, 0);
     
-    if(tracker.getFound()) {
+    //if(tracker.getFound()) {
         ofDrawBitmapString(ofToString((int) ofGetFrameRate()), ofGetWidth()-20, 20);
         
         if(bDrawMesh) {
             ofSetLineWidth(1);
             
-            tracker.draw();
+            tracker.drawDebug();
            // tracker.getImageMesh().drawWireframe();
             //tracker.drawPose();
             
-            ofPushView();
-            ofSetupScreenOrtho(sourceWidth, sourceHeight, -1000, 1000);
-            ofVec2f pos = tracker.getPosition();
-            ofTranslate(pos.x, pos.y);
-            applyMatrix(rotationMatrix);
-            ofScale(10,10,10);
-            ofDrawAxis(tracker.getScale());
-            ofPopView();
+//            ofPushView();
+//            ofSetupScreenOrtho(sourceWidth, sourceHeight, -1000, 1000);
+//            ofVec2f pos = tracker.getPosition();
+//            ofTranslate(pos.x, pos.y);
+//            applyMatrix(rotationMatrix);
+//            ofScale(10,10,10);
+//            ofDrawAxis(tracker.getScale());
+//            ofPopView();
         }
-    } else {
-        ofDrawBitmapString("searching for face...", 240, 20);
-    }
+//    } else {
+//        ofDrawBitmapString("searching for face...", 240, 20);
+//    }
     
     if(bPaused) {
         ofSetColor(255, 0, 0);
@@ -181,7 +182,7 @@ void ofApp::draw() {
 void ofApp::keyPressed(int key) {
     switch(key) {
         case 'r':
-            tracker.reset();
+      //      tracker.reset();
             break;
         case 'm':
             bDrawMesh = !bDrawMesh;
