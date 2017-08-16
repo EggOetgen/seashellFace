@@ -8,7 +8,7 @@
 //OSC:
 #define HOST "localhost"
 #define PORT 12000
-
+#define FACE_PORT 12001
 
 class ofApp : public ofBaseApp{
 
@@ -98,7 +98,9 @@ class ofApp : public ofBaseApp{
 
 
     ofxOscReceiver receiver;
+    ofxOscReceiver faceReceiver;
 
+    vector<ofVec2f> facialPoints;
 
 
 float rotation =0;

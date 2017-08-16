@@ -1,7 +1,9 @@
 #include "FaceOsc.h"
 
 FaceOsc::FaceOsc() {
-    address = DEFAULT_OSC_ADDRESS;
+    wekAddress = WEKI_OSC_ADDRESS;
+    faceAddress = FACE_OSC_ADDRESS;
+
     
     for (int i = 0; i < 8; i++){
         filters.push_back(MovingAverageFilter(28,1));
@@ -14,7 +16,9 @@ void FaceOsc::sendFaceOsc(ofxFaceTracker& tracker) {
     if(tracker.getFound()) {
         
         msg.clear();
-        msg.setAddress(address);
+        msg.setAddress(wekAddress);
+        msgFace.clear();
+        msgFace.setAddress(faceAddress);
         
         if(bIncludePose) {
             ofVec2f position = tracker.getPosition();
@@ -24,7 +28,7 @@ void FaceOsc::sendFaceOsc(ofxFaceTracker& tracker) {
             addMessage(orientation);
         }
         
-        if (bIncludeGestures) {
+//        if (bIncludeGestures) {
             float mouthWidth  = filters[0].filter(tracker.getGesture(ofxFaceTracker::MOUTH_WIDTH));
             float mouthHeight = filters[1].filter(tracker.getGesture(ofxFaceTracker::MOUTH_HEIGHT));
             float leftEyebrowHeight = filters[2].filter(tracker.getGesture(ofxFaceTracker::LEFT_EYEBROW_HEIGHT));
@@ -41,19 +45,37 @@ void FaceOsc::sendFaceOsc(ofxFaceTracker& tracker) {
             addMessage(leftEyeOpenness);
             addMessage(rightEyeOpenness);
             addMessage(jawOpenness);
-            addMessage(nostrilFlare);        }
-
-        if(bIncludeAllVertices){
+            addMessage(nostrilFlare);
+//    }
+//
+//        if(bIncludeAllVertices){
             ofVec2f center = tracker.getPosition();
             vector<ofVec2f> imagePoints = tracker.getImagePoints();
+        
             for(int i = 0; i < imagePoints.size(); i++){
                 ofVec2f p = imagePoints.at(i);
-                msg.addFloatArg((p.x - center.x)/tracker.getScale());
-                msg.addFloatArg((p.y - center.y)/tracker.getScale());
+//              cout << p.x << " " << (p.x - center.x)/tracker.getScale() <<endl;
+              //  cout << p.x << " " << p.y <<endl;
+                //                msgFace.addFloatArg((p.x - center.x)/tracker.getScale());
+//                msgFace.addFloatArg((p.y - center.y)/tracker.getScale());
+                                msgFace.addFloatArg((p.x));
+                                msgFace.addFloatArg((p.y));
+//
             }
-        }
+//        }
+//        ofPolyline leftEye = tracker.getImageFeature(ofxFaceTracker::LEFT_EYE);
+//        vector <glm::vec3> leftEyePoints = leftEye.getVertices();
+//        ofPoint leftEyePosition;
+//        for(int i = 0; i < leftEyePoints.size(); i++){
+//        leftEyePosition += leftEyePoints[i];
+//        }
+//        leftEyePosition/=leftEyePoints.size();
+//        
+//        msgFace.addFloatArg(( leftEyePosition.x ));
+//        msgFace.addFloatArg(( leftEyePosition.y ));
         
         osc.sendMessage(msg);
+        oscFACE.sendMessage(msgFace);
         
     } else {
         // not found
@@ -76,6 +98,6 @@ void FaceOsc::addMessage(float data) {
 }
 
 void FaceOsc::addMessage(int data) {
-    msg.setAddress(address);
+    msg.setAddress(wekAddress);
     msg.addIntArg(data);
 }

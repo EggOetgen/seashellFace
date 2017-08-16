@@ -15,7 +15,7 @@ void ofApp::loadSettings() {
     gui.setPosition(0, 0);
     gui.add(bIncludePose.set("pose", false));
     gui.add(bIncludeGestures.set("gesture", true));
-    gui.add(bIncludeAllVertices.set("raw", false));
+    gui.add(bIncludeAllVertices.set("raw", true));
     
     ofxXmlSettings xml;
     xml.loadFile("settings.xml");
@@ -37,8 +37,8 @@ void ofApp::loadSettings() {
     if(xml.getNumTags("framerate") > 0) {
         cam.setDesiredFrameRate(xml.getValue("framerate", 30));
     }
-    camWidth = xml.getValue("width", 640);
-    camHeight = xml.getValue("height", 480);
+    camWidth = xml.getValue("width", 1024);
+    camHeight = xml.getValue("height", 768 );
     cam.initGrabber(camWidth, camHeight);
 //    cam.getGrabber<ofxPS3EyeGrabber>()->setAutogain(true);
 //    cam.getGrabber<ofxPS3EyeGrabber>()->setAutoWhiteBalance  (true);
@@ -117,6 +117,7 @@ void ofApp::loadSettings() {
     xml.popTag();
     
     osc.setup(host, port);
+    oscFACE.setup(host, 12001);
 }
 
 void ofApp::setup() {

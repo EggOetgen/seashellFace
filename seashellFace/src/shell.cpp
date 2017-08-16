@@ -160,13 +160,23 @@ void shell::draw(int m){
    
     ofRotate(angle, axis.x, axis.y, axis.z);
     shellMesh.draw();
+//    float r = 5;
+// //   ofSetColor(120,20);
+//    for (int i = 0; i < shell.size(); i+=4){
+//        for(int j = 0; j < shell[i].size(); j+=4){
+//            
+//            ofDrawSphere(shell[i][j], r);
+//           // r *= 1.0000001;
+//        }
+//    }
+
            ofPopMatrix();
 
     //    ofPushMatrix();
 //    ofTranslate(50,0,0);
 
 //    float r = 5;
-//    for (int i = 0; i < shell.size(); i+=4){
+//    for (int i = shell.size()/4; i < shell.size(); i+=4){
 //        for(int j = 0; j < shell[i].size(); j+=4){
 //            
 //            ofDrawSphere(shell[i][j], r);

@@ -4,7 +4,8 @@
 #include "ofxOsc.h"
 #include "ofxGrt.h"
 
-#define DEFAULT_OSC_ADDRESS "/wek/inputs"
+#define WEKI_OSC_ADDRESS "/wek/inputs"
+#define FACE_OSC_ADDRESS "/faceData"
 
 class FaceOsc {
 public:
@@ -20,8 +21,12 @@ public:
     string host;
     int port;
     ofxOscSender osc;
+    ofxOscSender oscFACE;
+
     ofxOscMessage msg;
-    string address;
+    ofxOscMessage msgFace;
+    
+    string wekAddress, faceAddress;
     
     ofParameter<bool> bIncludePose;
     ofParameter<bool> bIncludeGestures;

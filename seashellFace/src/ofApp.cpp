@@ -6,11 +6,11 @@ void ofApp::setup(){
 //    n = 512;
 //    m = 96;
  
-    n = 384;
-    m = 80;
+//    n = 384;
+//    m = 80;
     
-//    n = 256;
-//    m = 48;
+    n = 256;
+    m = 48;
 
 //    n = 128;
 //    m = 32;
@@ -51,13 +51,15 @@ void ofApp::setup(){
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.5f);
     
     testCam.disableMouseInput();
-    cam.setPosition(0, 0, -500);
+    cam.setPosition(0, 0, -375);
     cam.setParent(shell.test);
     cam.enableOrtho();
     testCam.setPosition(0,0,-600);
     
     cout << "listening for osc messages on port " << PORT << "\n";
     receiver.setup(PORT);
+    faceReceiver.setup(FACE_PORT);
+
     
 }
 
@@ -72,7 +74,7 @@ void ofApp::update(){
         receiver.getNextMessage(m);
         if(m.getAddress() == "/shellData"){
         
-            //alpha = m.getArgAsFloat(0);
+            //alpha = ofMap(m.getArgAsFloat(0),0, 1, PI/3,PI);
             beta = ofMap(m.getArgAsFloat(1), 0, 1, 0, PI/2);
             A = ofMap(m.getArgAsFloat(2), 0, 1,0.0f, 100.f);
             mu = ofMap(m.getArgAsFloat(3), 0, 1,0.0f,  PI);
@@ -80,12 +82,35 @@ void ofApp::update(){
             phi = ofMap(m.getArgAsFloat(5), 0, 1, 0, PI);
             a = ofMap(m.getArgAsFloat(6),0, 1, 0.0f, 50.f);
             b = ofMap(m.getArgAsFloat(7),0, 1, 0.0f, 50.f);
-            L = ofMap(m.getArgAsFloat(8),0, 1, 0.0f, 5.f);
-            W1 = ofMap(m.getArgAsFloat(9),0, 1, -5.f, 5.f);
-            W2 = ofMap(m.getArgAsFloat(10),0, 1, -10.f, 10.f);
-            N = (int)ofMap(m.getArgAsFloat(11),0, 1, -10, 10);
+            L = ofMap(m.getArgAsFloat(8),0, 1, 0.0f, 20.f);
+            W1 = ofMap(m.getArgAsFloat(9),0, 1, -25.f, 25.f);
+            W2 = ofMap(m.getArgAsFloat(10),0, 1, 0.f, 10.f);
+            N = (int)ofMap(m.getArgAsFloat(11),0, 1, 0, 50);
         }
+        
+    
     }
+    
+    while(faceReceiver.hasWaitingMessages()){
+        
+        // get the next message
+        ofxOscMessage m;
+        faceReceiver.getNextMessage(m);
+
+        
+      if(m.getAddress() == "/faceData"){
+            facialPoints.clear();
+            for(int i = 0; i < 60; i+=2){
+                ofPoint p;
+                p.x = m.getArgAsFloat(i);
+                p.y = m.getArgAsFloat(i + 1);
+                facialPoints.push_back(p);
+              
+            }
+        
+    }
+    }
+
 
    shell.generate(n,m, D, turns, alpha, beta, A, mu, omega, phi, a, b, L, P, W1, W2, N);
     if(turns != pTurns){
@@ -105,31 +130,40 @@ void ofApp::update(){
 void ofApp::draw(){
    
    // gui.draw();
-    GUI.begin();
-    if(ImGui::Button("Random"))
-    {
-        rando = !rando;
-            }
-    ImGui::SliderFloat("Turns", &turns, 0.0f, 10 * TWO_PI);
-    ImGui::SliderFloat("alpha", &alpha, 0.0f, PI);
-    ImGui::SliderFloat("beta", &beta, -PI, PI);
-    ImGui::SliderFloat("A", &A, 0.0f, 100.f);
-    ImGui::SliderFloat("mu", &mu, 0.0f,  TWO_PI);
-    ImGui::SliderFloat("omega", &omega, -TWO_PI,  TWO_PI);
-    ImGui::SliderFloat("phi", &phi, -PI, PI);
-    ImGui::SliderFloat("a", &a, 0.0f, 50.f);
-    ImGui::SliderFloat("b", &b, 0.0f, 50.f);
-    ImGui::SliderFloat("L", &L, 0.0f, 5.f);
-    ImGui::SliderFloat("W1", &W1, -5.f, 5.f);
-    ImGui::SliderFloat("W2", &W2, -10.f, 10.f);
-    ImGui::SliderInt("N", &N, -10.f, 10.f);
-    GUI.end();
-    
+     ofDrawBitmapString(ofToString((int) ofGetFrameRate()), ofGetWidth()-20, 20);
+//    GUI.begin();
+//    if(ImGui::Button("Random"))
+//    {
+//        rando = !rando;
+//            }
+//    ImGui::SliderFloat("Turns", &turns, 0.0f, 10 * TWO_PI);
+//    ImGui::SliderFloat("alpha", &alpha, 0.0f, PI);
+//    ImGui::SliderFloat("beta", &beta, -PI, PI);
+//    ImGui::SliderFloat("A", &A, 0.0f, 100.f);
+//    ImGui::SliderFloat("mu", &mu, 0.0f,  TWO_PI);
+//    ImGui::SliderFloat("omega", &omega, -TWO_PI,  TWO_PI);
+//    ImGui::SliderFloat("phi", &phi, -PI, PI);
+//    ImGui::SliderFloat("a", &a, 0.0f, 50.f);
+//    ImGui::SliderFloat("b", &b, 0.0f, 50.f);
+//    ImGui::SliderFloat("L", &L, 0.0f, 5.f);
+//    ImGui::SliderFloat("W1", &W1, -5.f, 5.f);
+//    ImGui::SliderFloat("W2", &W2, -10.f, 10.f);
+//    ImGui::SliderInt("N", &N, -10.f, 10.f);
+//    GUI.end();
+//    
     if(rando) randomise();
    // autoPilot();
     ofEnableDepthTest();
    
+    
+    
     light.enable();
+    for(int i = 17; i < facialPoints.size(); i ++){
+        
+        ofDrawSphere(facialPoints[i].x, facialPoints[i].y, 4.f);
+        
+    }
+
 //    ofVec3f target = shell.shellMesh.getCentroid();
       cam.lookAt(shell.test);
    // cam.rotateAround(curRot,shell.centroid);
@@ -138,8 +172,7 @@ void ofApp::draw(){
    // ofPushMatrix();
 //    ofRotateY(rotation);
 //    ofRotateZ(rotation);
-
-                shell.draw(m);
+                   shell.draw(m);
     //  cam.draw();
 //    ofSetColor(255, 255, 0);
 //    ofVec3f v1 = cam.getGlobalPosition();
